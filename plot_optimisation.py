@@ -2,7 +2,7 @@ import os
 import logging
 from stringprep import c22_specials
 from ROOT import TH1D, TH2D, TFile, TTree, TColor, TCanvas, TLegend, TLine, TLatex, TMath, TEfficiency
-from ROOT import kBlack, kBlue, kRed, kGray, kGreen, kWhite
+from ROOT import kBlack, kBlue, kRed, kGray, kGreen, kWhite, kAzure
 from ROOT import gStyle, gPad, gROOT
 from ROOT import gROOT
 from ROOT import TStyle
@@ -30,13 +30,41 @@ gStyle.SetPadTickY(1)
 gStyle.SetPadTickX(1)
 
 # Define features here
-h_reco_R = fFile.Get('track_Rprod')
+h_seed_R = fFile.Get('seed_Rprod')
+h_seed_R.Sumw2()
+h_seedLLP_R = fFile.Get('seedLLP_Rprod')
+h_seedLLP_R.Sumw2()
+h_track_R = fFile.Get('track_Rprod')
+h_track_R.Sumw2()
+h_trackLLP_R = fFile.Get('trackLLP_Rprod')
+h_trackLLP_R.Sumw2()
+h_merge_R = fFile.Get('merged_Rprod')
+h_merge_R.Sumw2()
+h_reco_R = fFile.Get('refitted_Rprod')
 h_reco_R.Sumw2()
 h_tot_R = fFile.Get('truth_Rprod')
 h_tot_R.Sumw2()
 
+eff_seed = TEfficiency(h_seed_R, h_tot_R)
+eff_seedLLP = h_seedLLP_R.Clone()
+eff_seedLLP.Divide(h_tot_R)
+#eff_seedLLP = TEfficiency(h_seedLLP_R, h_tot_R)
+eff_trk = TEfficiency(h_track_R, h_tot_R)
+eff_trkLLP = TEfficiency(h_trackLLP_R, h_tot_R)
+eff_merge = TEfficiency(h_merge_R, h_tot_R)
 eff_std = TEfficiency(h_reco_R, h_tot_R)
-eff_std.SetLineColor(kBlue)
+
+eff_seed.SetLineColor(kGreen+1)
+eff_seed.SetLineWidth(2)
+eff_seedLLP.SetLineColor(kGreen+2)
+eff_seedLLP.SetLineWidth(2)
+eff_trk.SetLineColor(kAzure)
+eff_trk.SetLineWidth(2)
+eff_trkLLP.SetLineColor(kAzure+1)
+eff_trkLLP.SetLineWidth(2)
+eff_merge.SetLineColor(kGray+2)
+eff_merge.SetLineWidth(2)
+eff_std.SetLineColor(kBlack)
 eff_std.SetLineWidth(2)
 
 c1 = TCanvas()
@@ -57,10 +85,15 @@ h_frame.SetMinimum(0.)
 h_frame.SetMaximum(1.05)
 
 h_frame.Draw()
+eff_seed.Draw("E0SAME")
+eff_seedLLP.Draw("E0SAME")
+eff_trk.Draw("E0SAME")
+eff_trkLLP.Draw("E0SAME")
+eff_merge.Draw("E0SAME")
 eff_std.Draw("E0SAME")
 
 postick = [31, 51, 74, 102, 127, 340, 554, 819, 1153, 1486]
-labtick = ["VXD0-1", "VXD2-3", "VXD4-5", "VXD6-7",
+labtick = ["VXD0/1", "VXD2/3", "VXD4/5", "VXD6/7",
            "IT0", "IT1", "IT2", "OT0", "OT1", "OT2"]
 lines = []
 
@@ -77,25 +110,30 @@ for ipos, pos in enumerate(postick):
     lines[ipos].SetLineWidth(2)
     lines[ipos].SetLineColor(kGray+3)
     lines[ipos].Draw()
-    t3.DrawLatex(pos+8, 0.8, labtick[ipos])
+    t3.DrawLatex(pos+4, 0.02, labtick[ipos])
 
 gPad.RedrawAxis()
 gPad.SetTopMargin(0.05)
 gPad.SetBottomMargin(0.15)
 gPad.SetRightMargin(0.1)
 
-'''
-leg = TLegend(.12, .8, .5, .92)
+leg = TLegend(.61, .35, .92, .62)
 leg.SetBorderSize(0)
 leg.SetFillColor(0)
 leg.SetFillStyle(0)
 leg.SetTextFont(42)
-leg.SetTextSize(0.045)
-leg.AddEntry(eff_std, "Standard tracks", "L")
+leg.SetTextSize(0.04)
+leg.AddEntry(eff_seed, "Seed tracks", "L")
+leg.AddEntry(eff_seedLLP, "Seed LLP tracks", "L")
+leg.AddEntry(eff_trk, "Tracks", "L")
+leg.AddEntry(eff_trkLLP, "LLP tracks", "L")
+leg.AddEntry(eff_merge, "Merged tracks", "L")
+leg.AddEntry(eff_std, "Refitted tracks", "L")
 leg.Draw()
-'''
+
 c1.SaveAs(options.outFolder+"/Track_Efficiency_vs_R.pdf")
 
+'''
 c2 = TCanvas()
 
 # Define features here
@@ -129,16 +167,7 @@ gPad.RedrawAxis()
 gPad.SetTopMargin(0.05)
 gPad.SetBottomMargin(0.15)
 gPad.SetRightMargin(0.1)
-'''
-leg = TLegend(.12, .8, .5, .92)
-leg.SetBorderSize(0)
-leg.SetFillColor(0)
-leg.SetFillStyle(0)
-leg.SetTextFont(42)
-leg.SetTextSize(0.045)
-leg.AddEntry(eff_std, "Standard tracks", "L")
-leg.Draw()
-'''
+
 c2.SaveAs(options.outFolder+"/Track_Efficiency_vs_pT.pdf")
 
 c3 = TCanvas()
@@ -174,16 +203,7 @@ gPad.RedrawAxis()
 gPad.SetTopMargin(0.05)
 gPad.SetBottomMargin(0.15)
 gPad.SetRightMargin(0.1)
-'''
-leg = TLegend(.12, .8, .5, .92)
-leg.SetBorderSize(0)
-leg.SetFillColor(0)
-leg.SetFillStyle(0)
-leg.SetTextFont(42)
-leg.SetTextSize(0.045)
-leg.AddEntry(eff_std, "Standard tracks", "L")
-leg.Draw()
-'''
+
 c3.SaveAs(options.outFolder+"/Track_Efficiency_vs_theta.pdf")
 
 fFile.Close()
@@ -261,16 +281,6 @@ gPad.SetTopMargin(0.05)
 gPad.SetBottomMargin(0.15)
 gPad.SetRightMargin(0.1)
 
-'''
-leg = TLegend(.12, .8, .5, .92)
-leg.SetBorderSize(0)
-leg.SetFillColor(0)
-leg.SetFillStyle(0)
-leg.SetTextFont(42)
-leg.SetTextSize(0.045)
-leg.AddEntry(eff_std, "Standard tracks", "L")
-leg.Draw()
-'''
 c1.SaveAs(options.outFolder+"/Track_Efficiency_vs_R.pdf")
 
 c2 = TCanvas()
@@ -306,16 +316,7 @@ gPad.RedrawAxis()
 gPad.SetTopMargin(0.05)
 gPad.SetBottomMargin(0.15)
 gPad.SetRightMargin(0.1)
-'''
-leg = TLegend(.12, .8, .5, .92)
-leg.SetBorderSize(0)
-leg.SetFillColor(0)
-leg.SetFillStyle(0)
-leg.SetTextFont(42)
-leg.SetTextSize(0.045)
-leg.AddEntry(eff_std, "Standard tracks", "L")
-leg.Draw()
-'''
+
 c2.SaveAs(options.outFolder+"/Track_Efficiency_vs_pT.pdf")
 
 c3 = TCanvas()
@@ -351,16 +352,8 @@ gPad.RedrawAxis()
 gPad.SetTopMargin(0.05)
 gPad.SetBottomMargin(0.15)
 gPad.SetRightMargin(0.1)
-'''
-leg = TLegend(.12, .8, .5, .92)
-leg.SetBorderSize(0)
-leg.SetFillColor(0)
-leg.SetFillStyle(0)
-leg.SetTextFont(42)
-leg.SetTextSize(0.045)
-leg.AddEntry(eff_std, "Standard tracks", "L")
-leg.Draw()
-'''
+
 c3.SaveAs(options.outFolder+"/Track_Efficiency_vs_theta.pdf")
+'''
 
 fFile.Close()
