@@ -20,6 +20,8 @@ def check_output_directory(output_path):
 parser = OptionParser()
 parser.add_option("-i", "--inFile",   dest='inFile',
                   default="histos_occupancy.root", help="Name of the ROOT histo file")
+parser.add_option('-o', '--outFile', help='--outFile TrackerOccupancy.pdf',
+                  type=str, default='TrackerOccupancy.pdf')
 (options, args) = parser.parse_args()
 
 # Init the logger for the script and various modules
@@ -75,21 +77,21 @@ leg.AddEntry(h_all, "No time window", "F")
 leg.AddEntry(h_time, "Time window [-3 #sigma_{t}, 5 #sigma_{t}]", "F")
 leg.Draw()
 
-t1 = TLatex()
-t1.SetTextFont(42)
-t1.SetTextColor(1)
-t1.SetTextSize(0.04)
-t1.SetTextAlign(12)
-t1.SetNDC()
-t1.DrawLatex(0.6, 0.85, '#bf{Muon Collider}')
-
-t1_2 = TLatex()
-t1_2.SetTextFont(42)
-t1_2.SetTextColor(1)
-t1_2.SetTextSize(0.04)
-t1_2.SetTextAlign(12)
-t1_2.SetNDC()
-t1_2.DrawLatex(0.6, 0.8, '#it{Simulation}')
+# t1 = TLatex()
+# t1.SetTextFont(42)
+# t1.SetTextColor(1)
+# t1.SetTextSize(0.04)
+# t1.SetTextAlign(12)
+# t1.SetNDC()
+# t1.DrawLatex(0.6, 0.85, '#bf{Muon Collider}')
+#
+# t1_2 = TLatex()
+# t1_2.SetTextFont(42)
+# t1_2.SetTextColor(1)
+# t1_2.SetTextSize(0.04)
+# t1_2.SetTextAlign(12)
+# t1_2.SetNDC()
+# t1_2.DrawLatex(0.6, 0.8, '#it{Simulation}')
 
 t2 = TLatex()
 t2.SetTextFont(42)
@@ -131,6 +133,6 @@ t4.SetTextAlign(12)
 t4.SetNDC()
 t4.DrawLatex(0.82, 0.94, '#sqrt{s} = 10 TeV')
 
-c1.SaveAs("TrackerOccupancy.pdf")
+c1.SaveAs(options.outFile)
 
 fFile.Close()
