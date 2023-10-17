@@ -59,9 +59,11 @@ h_time.Draw("HISTSAME")
 
 gPad.RedrawAxis()
 
-detector_boundaries = [8, 16, 24, 27, 34, 41, 44, 48]
+is_ten_TeV = 3
+detector_boundaries = [8-is_ten_TeV, 16-is_ten_TeV, 24-is_ten_TeV, 27 -
+                       is_ten_TeV, 34-is_ten_TeV, 41-is_ten_TeV, 44-is_ten_TeV, 48-is_ten_TeV]
 for bound in detector_boundaries:
-    splitLine = TLine(bound, 0, bound, 600)
+    splitLine = TLine(bound, 0, bound, 100)
     splitLine.SetLineWidth(2)
     splitLine.SetLineStyle(2)
     splitLine.SetLineColor(kGray+1)
@@ -123,7 +125,7 @@ t3.SetTextColor(1)
 t3.SetTextSize(0.035)
 t3.SetTextAlign(12)
 t3.SetNDC()
-t3.DrawLatex(0.15, 0.94, 'Background hits overlay in [-360, 480] ps range')
+t3.DrawLatex(0.15, 0.94, 'Background hits overlay in [-0.5, 15] ns range')
 
 t4 = TLatex()
 t4.SetTextFont(42)
