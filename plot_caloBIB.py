@@ -12,7 +12,7 @@ from math import *
 
 def compose_plot(histname, titleX, titleY, fFileA, fFileB, rminA, stepA, rminB, stepB, rangeX=None):
 
-    c = TCanvas("", "", 800, 600)   
+    c = TCanvas("", "", 800, 600)
 
     # this is v1
     histA = fFileA.Get(histname)
@@ -25,7 +25,7 @@ def compose_plot(histname, titleX, titleY, fFileA, fFileB, rminA, stepA, rminB, 
     # hardcoding energy normalisation
     r = rminA
     h_barrelA = 2210*2.
-    for bin in range(1,histA.GetNbinsX()):
+    for bin in range(1, histA.GetNbinsX()):
         surface = 2.*pi*r*h_barrelA
         elayer = histA.GetBinContent(bin)
         print(elayer, surface)
@@ -47,7 +47,7 @@ def compose_plot(histname, titleX, titleY, fFileA, fFileB, rminA, stepA, rminB, 
     # hardcoding energy normalisation
     r = rminB
     h_barrelB = 2574.5*2.
-    for bin in range(1,histB.GetNbinsX()):
+    for bin in range(1, histB.GetNbinsX()):
         surface = 2.*pi*r*h_barrelB
         elayer = histB.GetBinContent(bin)
         print(elayer, surface)
@@ -93,7 +93,8 @@ gStyle.SetPadTickX(1)
 gStyle.SetPadTickY(1)
 
 # ECAL barrel
-c1, leg = compose_plot("ECAL_simhit_layer", "Calorimeter layer [0.6 X_{0}]", "Energy density [MeV/cm^{2}]", fFileA, fFileB, 1500, 5.05, 1771, 5.35, [0, 50])
+c1, leg = compose_plot(
+    "ECAL_simhit_layer", "Calorimeter layer [0.6 X_{0}]", "Energy density [MeV/cm^{2}]", fFileA, fFileB, 1500, 5.05, 1771, 5.35, [0, 50])
 
 leg.Draw()
 
@@ -109,10 +110,10 @@ t2_3.DrawLatex(.6, 0.78, 'Simulated hits')
 c1.SaveAs("BIB_ECAL_eloss.pdf")
 
 # Gun energy
-#c2, leg = compose_plot("HCAL_simhit_layer", "Calorimeter layer [0.6 #lambda_{0}]", "Energy deposit per layer [GeV]", fFileA, fFileB, 1771, 5, 1771, 5, [0, 75])
-#leg.Draw()
-#t2_3.DrawLatex(.62, 0.84, 'Photon particle gun')
-#c2.SaveAs("BIB_HCAL_eloss.pdf")
+# c2, leg = compose_plot("HCAL_simhit_layer", "Calorimeter layer [0.6 #lambda_{0}]", "Energy deposit per layer [GeV]", fFileA, fFileB, 1771, 5, 1771, 5, [0, 75])
+# leg.Draw()
+# t2_3.DrawLatex(.62, 0.84, 'Photon particle gun')
+# c2.SaveAs("BIB_HCAL_eloss.pdf")
 
 fFileA.Close()
 fFileB.Close()
