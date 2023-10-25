@@ -117,7 +117,7 @@ t2_3.SetTextColor(1)
 t2_3.SetTextSize(0.035)
 t2_3.SetTextAlign(12)
 t2_3.SetNDC()
-t2_3.DrawLatex(0.25, 0.73, 'B_{solenoid} = 5 T')
+t2_3.DrawLatex(0.25, 0.73, 'B_{solenoid} = 3.57 T')
 
 t3 = TLatex()
 t3.SetTextFont(42)
