@@ -20,8 +20,8 @@ def check_output_directory(output_path):
 parser = OptionParser()
 parser.add_option("-i", "--inFile",   dest='inFile',
                   default="histos_occupancy.root", help="Name of the ROOT histo file")
-parser.add_option('-o', '--outFile', help='--outFile TrackerOccupancy.pdf',
-                  type=str, default='TrackerOccupancy.pdf')
+parser.add_option('-o', '--outFile', help='--outFile _v0A',
+                  type=str, default='_v0A')
 (options, args) = parser.parse_args()
 
 # Init the logger for the script and various modules
@@ -135,6 +135,63 @@ t4.SetTextAlign(12)
 t4.SetNDC()
 t4.DrawLatex(0.82, 0.94, '#sqrt{s} = 10 TeV')
 
-c1.SaveAs(options.outFile)
+c1.SaveAs("TrackerOccupancy"+options.outFile+".pdf")
+
+# Define features here
+h_all_2D = fFile.Get('h_nhits_endcap_2D')
+
+c2 = TCanvas("", "", 800, 800)
+c2.SetTopMargin(0.09)
+c2.SetRightMargin(0.05)
+c2.SetBottomMargin(0.16)
+c2.SetLeftMargin(0.15)
+
+h_all_2D.SetLineColor(kBlue+1)
+h_all_2D.SetFillColor(kBlue+1)
+h_all_2D.SetTitle("")
+h_all_2D.GetYaxis().SetTitle("Average number of hits / cm^{  2}")
+h_all_2D.GetYaxis().SetTitleOffset(1.4)
+h_all_2D.SetMinimum(0.0001)
+h_all_2D.GetXaxis().SetNdivisions(10)
+h_all_2D.GetXaxis().SetLabelSize(0.04)
+h_all_2D.GetXaxis().SetTitleOffset(1.3)
+h_all_2D.GetXaxis().SetTitle("Tracking Detector Layer")
+h_all_2D.Draw("COLZ")
+
+gPad.RedrawAxis()
+
+# t1 = TLatex()
+# t1.SetTextFont(42)
+# t1.SetTextColor(1)
+# t1.SetTextSize(0.04)
+# t1.SetTextAlign(12)
+# t1.SetNDC()
+# t1.DrawLatex(0.6, 0.85, '#bf{Muon Collider}')
+#
+# t1_2 = TLatex()
+# t1_2.SetTextFont(42)
+# t1_2.SetTextColor(1)
+# t1_2.SetTextSize(0.04)
+# t1_2.SetTextAlign(12)
+# t1_2.SetNDC()
+# t1_2.DrawLatex(0.6, 0.8, '#it{Simulation}')
+
+t3 = TLatex()
+t3.SetTextFont(42)
+t3.SetTextColor(1)
+t3.SetTextSize(0.035)
+t3.SetTextAlign(12)
+t3.SetNDC()
+t3.DrawLatex(0.15, 0.94, 'Background hits overlay in [-0.5, 15] ns range')
+
+t4 = TLatex()
+t4.SetTextFont(42)
+t4.SetTextColor(1)
+t4.SetTextSize(0.035)
+t4.SetTextAlign(12)
+t4.SetNDC()
+t4.DrawLatex(0.82, 0.94, '#sqrt{s} = 10 TeV')
+
+c2.SaveAs("TrackerEndcapOccupancy_2D"+options.outFile+".pdf")
 
 fFile.Close()

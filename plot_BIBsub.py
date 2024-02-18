@@ -19,7 +19,7 @@ def check_output_directory(output_path):
 
 N_sigma = 5
 early_ev_limit = 1000000000  # use only for debug
-isECAL = 0
+isECAL = 1
 
 gStyle.SetPaintTextFormat("1.3f")
 
