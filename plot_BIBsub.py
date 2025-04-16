@@ -43,7 +43,7 @@ gStyle.SetPadTickY(1)
 arrBins_theta = array('d', (0., 30.*TMath.Pi()/180., 40.*TMath.Pi()/180., 50.*TMath.Pi()/180., 60.*TMath.Pi()/180., 70.*TMath.Pi()/180.,
                             90.*TMath.Pi()/180., 110.*TMath.Pi()/180., 120.*TMath.Pi()/180., 130.*TMath.Pi()/180., 140.*TMath.Pi()/180., 150.*TMath.Pi()/180., TMath.Pi()))
 
-arrBins_theta_sym = array('d', (0., 30.*TMath.Pi()/180., 40.*TMath.Pi()/180., 45.*TMath.Pi()/180., 50. *
+arrBins_theta_sym = array('d', (0., 20.*TMath.Pi()/180., 25.*TMath.Pi()/180., 30.*TMath.Pi()/180., 35.*TMath.Pi()/180., 40.*TMath.Pi()/180., 45.*TMath.Pi()/180., 50. *
                           TMath.Pi()/180., 55.*TMath.Pi()/180., 60.*TMath.Pi()/180., 70.*TMath.Pi()/180., 90.*TMath.Pi()/180.))
 
 max_layer = 0
@@ -183,14 +183,6 @@ print("Efficiency: ", N_passed_hits/N_total_hits)
 
 # Plotting the thresholds
 
-gStyle.SetPadTopMargin(0.09)
-gStyle.SetPadRightMargin(0.15)
-gStyle.SetPadBottomMargin(0.16)
-gStyle.SetPadLeftMargin(0.15)
-gStyle.SetOptStat(0)
-gStyle.SetPadTickX(1)
-gStyle.SetPadTickY(1)
-
 histo_mode = TH2D("2dmode", "2dmode", len(
     arrBins_theta)-1, arrBins_theta, 50, 0, 50)
 histo_mean = TH2D("2dmean", "2dmean", len(
@@ -254,15 +246,83 @@ for i in range(len(x_graph_sym)):
     histo_stddev_sym.Fill(
         x_graph_sym[i], y_graph_sym[i], z_graph_sym_stddev[i])
 
+gStyle.SetPadTopMargin(0.09)
+gStyle.SetPadRightMargin(0.2)
+gStyle.SetPadBottomMargin(0.16)
+gStyle.SetPadLeftMargin(0.10)
+gStyle.SetOptStat(0)
+gStyle.SetPadTickX(1)
+gStyle.SetPadTickY(1)
+
 c1_syma = TCanvas("", "", 800, 600)
 histo_mean_sym.Draw("COLZTEXT")
 histo_mean_sym.SetMinimum(0)
 c1_syma.SaveAs("mean_vs_theta_layer_sym.pdf")
 
 c2_syma = TCanvas("", "", 800, 600)
-histo_mode_sym.Draw("COLZTEXT")
+histo_mode_sym.SetTitle(" ")
+histo_mode_sym.GetYaxis().SetTitle("ECAL layer")
+histo_mode_sym.GetXaxis().SetTitleOffset(1.3)
+histo_mode_sym.GetXaxis().SetTitle("Cell #theta [rad]")
+histo_mode_sym.GetZaxis().SetTitle("Mode of cell energy [GeV]")
+histo_mode_sym.GetZaxis().SetTitleOffset(1.6)
+histo_mode_sym.Draw("COLZ")
 histo_mode_sym.SetMinimum(0)
+
+#t2_3 = TLatex()
+#t2_3.SetTextFont(42)
+#t2_3.SetTextColor(1)
+#t2_3.SetTextSize(0.035)
+#t2_3.SetTextAlign(12)
+#t2_3.SetNDC()
+#t2_3.DrawLatex(.52, 0.81, 'Neutrino particle gun')
+#t2_3.DrawLatex(.52, 0.75, 'Cell threshold 50 KeV')
+
+#t3 = TLatex()
+#t3.SetTextFont(42)
+#t3.SetTextColor(1)
+#t3.SetTextSize(0.035)
+#t3.SetTextAlign(12)
+#t3.SetNDC()
+#t3.DrawLatex(0.1, 0.94, 'Background hits overlay in [-0.5, 15] ns range')
+    
+
+t1 = TLatex()
+t1.SetTextFont(42)
+t1.SetTextColor(1)
+t1.SetTextSize(0.04)
+t1.SetTextAlign(12)
+t1.SetNDC()
+t1.DrawLatex(0.14, 0.85, '#bf{#it{Muon Collider}}')
+
+t1_2 = TLatex()
+t1_2.SetTextFont(42)
+t1_2.SetTextColor(1)
+t1_2.SetTextSize(0.04)
+t1_2.SetTextAlign(12)
+t1_2.SetNDC()
+t1_2.DrawLatex(0.14, 0.8, 'Simulation, with BIB+IPP (EU24 Lattice)')
+
+t3 = TLatex()
+t3.SetTextFont(42)
+t3.SetTextColor(1)
+t3.SetTextSize(0.035)
+t3.SetTextAlign(12)
+t3.SetNDC()
+t3.DrawLatex(0.54, 0.94, '#it{MAIA} Detector Concept')
+
+t4 = TLatex()
+t4.SetTextFont(42)
+t4.SetTextColor(1)
+t4.SetTextSize(0.035)
+t4.SetTextAlign(12)
+t4.SetNDC()
+t4.DrawLatex(0.14, 0.74, '#sqrt{s} = 10 TeV')
+
 c2_syma.SaveAs("mode_vs_theta_layer_sym.pdf")
+
+histo_mode_sym.Draw("COLZTEXT")
+c2_syma.SaveAs("mode_vs_theta_layer_sym_text.pdf")
 
 c1_sym = TCanvas("", "", 800, 600)
 histo_th_mean_sym.Draw("COLZTEXT")

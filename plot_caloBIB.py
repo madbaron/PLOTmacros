@@ -46,7 +46,7 @@ def compose_plot(histname, titleX, titleY, fFileA, fFileB, rminA, stepA, rminB, 
 
     # hardcoding energy normalisation
     r = rminB
-    h_barrelB = 2574.5*2.
+    h_barrelB = 2307*2.
     for bin in range(1, histB.GetNbinsX()):
         surface = 2.*pi*r*h_barrelB
         elayer = histB.GetBinContent(bin)
@@ -60,14 +60,14 @@ def compose_plot(histname, titleX, titleY, fFileA, fFileB, rminA, stepA, rminB, 
 
     gPad.RedrawAxis()
 
-    leg = TLegend(.6, .6, .9, .75)
+    leg = TLegend(.5, .5, .8, .65)
     leg.SetBorderSize(0)
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetTextFont(42)
     leg.SetTextSize(0.035)
     leg.AddEntry(histA, "MuColl v1", "L")
-    leg.AddEntry(histB, "MuColl 10 TeV v0A", "L")
+    leg.AddEntry(histB, "#it{MAIA} Detector Concept", "L")
 
     return c, leg
 
@@ -80,9 +80,9 @@ def check_output_directory(output_path):
 
 # Load files, hardcoding FTW...
 fFileA = TFile(
-    "/Users/fmeloni/MuonCollider/MuCData/ntup_photons/simhit_BIBv1.root", "READ")
+    "simhit_v1.root", "READ")
 fFileB = TFile(
-    "/Users/fmeloni/MuonCollider/MuCData/ntup_photons/simhit_BIBv0A.root", "READ")
+    "simhit_MAIA.root", "READ")
 
 gStyle.SetPadTopMargin(0.09)
 gStyle.SetPadRightMargin(0.05)
@@ -94,7 +94,7 @@ gStyle.SetPadTickY(1)
 
 # ECAL barrel
 c1, leg = compose_plot(
-    "ECAL_simhit_layer", "Calorimeter layer [0.6 X_{0}]", "Energy density [MeV/cm^{2}]", fFileA, fFileB, 1500, 5.05, 1771, 5.35, [0, 50])
+    "ECAL_simhit_layer", "Calorimeter layer", "Simulated hit energy density [MeV/cm^{2}]", fFileA, fFileB, 1500, 5.05, 1857, 5.35, [0, 50])
 
 leg.Draw()
 
@@ -104,8 +104,32 @@ t2_3.SetTextColor(1)
 t2_3.SetTextSize(0.035)
 t2_3.SetTextAlign(12)
 t2_3.SetNDC()
-t2_3.DrawLatex(.6, 0.84, 'FLUKA 10 TeV BIB simulation')
-t2_3.DrawLatex(.6, 0.78, 'Simulated hits')
+#t2_3.DrawLatex(.6, 0.84, 'FLUKA 10 TeV BIB simulation')
+#t2_3.DrawLatex(.62, 0.85, 'Simulated hits')
+
+t1 = TLatex()
+t1.SetTextFont(42)
+t1.SetTextColor(1)
+t1.SetTextSize(0.04)
+t1.SetTextAlign(12)
+t1.SetNDC()
+t1.DrawLatex(0.5, 0.85, '#bf{#it{Muon Collider}}')
+
+t1_2 = TLatex()
+t1_2.SetTextFont(42)
+t1_2.SetTextColor(1)
+t1_2.SetTextSize(0.04)
+t1_2.SetTextAlign(12)
+t1_2.SetNDC()
+t1_2.DrawLatex(0.5, 0.8, 'Simulation, with BIB (Lattice v0.4)')
+
+t4 = TLatex()
+t4.SetTextFont(42)
+t4.SetTextColor(1)
+t4.SetTextSize(0.035)
+t4.SetTextAlign(12)
+t4.SetNDC()
+t4.DrawLatex(0.5, 0.74, '#sqrt{s} = 10 TeV')
 
 c1.SaveAs("BIB_ECAL_eloss.pdf")
 

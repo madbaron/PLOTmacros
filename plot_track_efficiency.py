@@ -192,8 +192,8 @@ t3.SetTextColor(1)
 t3.SetTextSize(0.035)
 t3.SetTextAlign(12)
 t3.SetNDC()
-t3.DrawLatex(0.1, 0.94, 'No background hit overlay')
-# t3.DrawLatex(0.1, 0.94, 'Background hits overlay in [-0.36 0.48] ns range')
+#t3.DrawLatex(0.1, 0.94, 'No background hit overlay')
+t3.DrawLatex(0.1, 0.94, 'BIB+IPP hits overlay')
 
 t4 = TLatex()
 t4.SetTextFont(42)
@@ -301,11 +301,11 @@ h_resolution_theta = TH2D('resolution_theta', 'resolution_theta', len(
 
 tree = fFile.Get("tracks_tree")
 for entry in tree:
-    if entry.pTtruth > 0:
-        h_resolution.Fill(entry.pTtruth, (entry.pTtruth -
-                          entry.pT)/(entry.pTtruth*entry.pTtruth))
-        h_resolution_theta.Fill(entry.theta, (entry.pTtruth -
-                                              entry.pT)/(entry.pTtruth*entry.pTtruth))
+    if entry.pT_truth > 0:
+        h_resolution.Fill(entry.pT_truth, (entry.pT_truth -
+                          entry.pT)/(entry.pT_truth*entry.pT_truth))
+        h_resolution_theta.Fill(entry.theta, (entry.pT_truth -
+                                              entry.pT)/(entry.pT_truth*entry.pT_truth))
 
 h_reso_pT = TH1D('reso_pT', 'reso_pT',
                  len(arrBins_pT)-1, arrBins_pT)
@@ -369,9 +369,102 @@ h_reso_theta.GetXaxis().SetTitleOffset(1.2)
 h_reso_theta.GetXaxis().SetTitle("Track #theta [rad]")
 h_reso_theta.Draw("E0")
 
-t3.DrawLatex(0.15, 0.94, 'Background hits overlay in [-0.36 0.48] ns range')
+#t3.DrawLatex(0.1, 0.94, 'No background hit overlay')
+t3.DrawLatex(0.1, 0.94, 'BIB+IPP hits overlay')
 t4.DrawLatex(0.82, 0.94, '#sqrt{s} = 10 TeV')
 
 c2_2.SaveAs("reso_vs_theta.pdf")
+
+'''
+gStyle.SetPadTopMargin(0.09)
+gStyle.SetPadRightMargin(0.15)
+gStyle.SetPadBottomMargin(0.16)
+gStyle.SetPadLeftMargin(0.15)
+gStyle.SetOptStat(0)
+gStyle.SetPadTickX(1)
+gStyle.SetPadTickY(1)
+
+c5 = TCanvas("", "", 800, 600)
+
+# Define features here
+h_reco = fFile.Get('track_theta_pT')
+h_tot = fFile.Get('truth_theta_pT')
+h_reco.Divide(h_tot)
+
+h_reco.SetTitle("")
+h_reco.GetZaxis().SetTitle("Seeding efficiency")
+h_reco.GetZaxis().SetTitleOffset(1.2)
+h_reco.GetYaxis().SetTitleOffset(1.2)
+h_reco.GetYaxis().SetRangeUser(0.,5.)
+h_reco.GetXaxis().SetTitleOffset(1.2)
+h_reco.GetYaxis().SetTitle("Truth particle p_{T} [GeV]")
+h_reco.GetXaxis().SetTitle("Truth particle #theta [rad]")
+h_reco.SetMinimum(0.0)
+h_reco.SetMaximum(1.0)
+
+h_reco.Draw("COLZ")
+
+t2_3 = TLatex()
+t2_3.SetTextFont(42)
+t2_3.SetTextColor(1)
+t2_3.SetTextSize(0.035)
+t2_3.SetTextAlign(12)
+t2_3.SetNDC()
+t2_3.DrawLatex(.17, 0.2, 'Muon particle gun, uniform in p_{T} (0.5, 50) GeV and #theta')
+
+t3 = TLatex()
+t3.SetTextFont(42)
+t3.SetTextColor(1)
+t3.SetTextSize(0.035)
+t3.SetTextAlign(12)
+t3.SetNDC()
+t3.DrawLatex(0.15, 0.94, 'No background hit overlay')
+
+t4 = TLatex()
+t4.SetTextFont(42)
+t4.SetTextColor(1)
+t4.SetTextSize(0.035)
+t4.SetTextAlign(12)
+t4.SetNDC()
+t4.DrawLatex(0.72, 0.94, '#sqrt{s} = 10 TeV')
+
+c5.SaveAs(options.outFolder+"/Track_Efficiency_vs_theta_pT.pdf")
+
+
+c5a = TCanvas("", "", 800, 600)
+
+# Define features here
+h_match = fFile.Get('n_matched_seed')
+h_all = fFile.Get('n_seed')
+
+h_all.SetTitle("")
+h_all.GetZaxis().SetTitleOffset(1.2)
+h_all.GetYaxis().SetTitleOffset(1.2)
+h_all.GetXaxis().SetTitleOffset(1.2)
+h_all.GetXaxis().SetTitle("Track seeds")
+h_match.SetLineWidth(2)
+h_match.SetLineColor(kBlue)
+
+h_all.SetLineWidth(2)
+h_all.SetLineColor(kRed)
+h_all.GetXaxis().SetRangeUser(0., 10.)
+h_all.SetMaximum(1.1*h_match.GetMaximum())
+
+h_all.Draw("HIST")
+h_match.Draw("HISTSAME")
+
+leg = TLegend(.52, .7, .85, .85)
+leg.SetBorderSize(0)
+leg.SetFillColor(0)
+leg.SetFillStyle(0)
+leg.SetTextFont(42)
+leg.SetTextSize(0.045)
+leg.AddEntry(h_all, "All Seeds", "L")
+leg.AddEntry(h_match, "Matched Seeds", "L")
+leg.Draw()
+
+c5a.SaveAs(options.outFolder+"/Nseeds.pdf")
+
+'''
 
 fFile.Close()
